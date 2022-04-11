@@ -17,8 +17,9 @@ function App() {
   }
 
   const handleSearch = (event) => {
-   setPage(1)
     localStorage.setItem("currentPage", 1);
+    localStorage.setItem("currentSearch", event.target.value);
+    setPage(1)
     setSearch(event.target.value);
   };
 
@@ -33,6 +34,8 @@ function App() {
 
   useEffect(() => {
     const currentPage = localStorage.getItem("currentPage")?localStorage.getItem("currentPage"):page;
+    const currentSearch = localStorage.getItem("currentSearch")?localStorage.getItem("currentSearch"):search;
+    setSearch(currentSearch)
     setPage(currentPage);
     const fetchCustomers = async () => {
       const { data } = await Axios.get(
@@ -50,7 +53,7 @@ function App() {
       
       <div className="search"><label htmlFor="search">
         Search by username:
-        <input id="search" type="text" onChange={handleSearch} />
+        <input id="search" type="text" value={search} onChange={handleSearch} />
       </label>
       </div>
       <div>  
