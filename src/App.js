@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from 'axios';
 import './App.css';
+import Popup from './Popup'; 
 
 function App() {
   const [search, setSearch] = useState('');
@@ -8,13 +9,7 @@ function App() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1); // No of pages
   const [perPage, setPerPage] = useState(1);
-
-  //const perPage = 1;
-  //const lastPage = page * perPage;
-  //const firstPage = lastPage - perPage;
-  //console.log("lastPage::::::::",lastPage)
-  //console.log("firstPage::::::::",firstPage)
-  //const currentPageDetail = customers.slice(firstPage, lastPage);
+  const [showPopup, setShowPopup] = useState(false);
 
   const pageNumber = [];
   for (let i = 1; i <= Math.ceil(total / perPage); i++) {
@@ -22,6 +17,8 @@ function App() {
   }
 
   const handleSearch = (event) => {
+   setPage(1)
+    localStorage.setItem("currentPage", 1);
     setSearch(event.target.value);
   };
 
@@ -30,7 +27,9 @@ function App() {
     setPage(event.target.value);
   }
 
-  
+  const handleTogglePopup = (event) => {  
+    setShowPopup(!showPopup) 
+  }  
 
   useEffect(() => {
     const currentPage = localStorage.getItem("currentPage")?localStorage.getItem("currentPage"):page;
@@ -54,6 +53,10 @@ function App() {
         <input id="search" type="text" onChange={handleSearch} />
       </label>
       </div>
+      <div>  
+       
+</div> 
+      
       <table>
     
     <thead>
@@ -70,7 +73,17 @@ function App() {
      <td data-label="fullName">{customer.full_name}</td>
      <td data-label="username">{customer.username}</td>
      <td data-label="email">{customer.email}</td>
-     <td data-label="picture"><img src={customer.picture} width="50" alt=""/></td>
+     <td data-label="picture">
+     <button onClick={handleTogglePopup.bind(this)}> <img src={customer.picture} width="50" alt=""/></button>  
+      {showPopup ?  
+      <Popup  
+        text='X'  
+        image={customer.picture}
+        closePopup={handleTogglePopup.bind(false)}  
+      />  
+      : null  
+      } 
+     </td>
     </tr>
     ))}
     </tbody>
